@@ -1,7 +1,7 @@
 (function ( ) {
 	'use strict';
 
-   angular.module('quotesondev',['ngSanitize'])
+   angular.module('quotesondev',[])
 
 	 .config(['$locationProvider', function($locationProvider){
 
