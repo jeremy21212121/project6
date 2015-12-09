@@ -106,11 +106,20 @@
 
 			 			if (quoteForm.$valid){
 							quotes.submit($scope.quote).then( quoteSubmitSuccess, quoteSubmitFail );
-
-
 						}
 						else {
-            alert('Form Invalid')}
+							var quoteAuthorInput = document.getElementById('quote-author');
+							var quoteContentInput = document.getElementById('quote-content');
+							var requiredFieldMsg = 'This field is required'
+							if (quoteForm.quote_author.$invalid){
+								quoteAuthorInput.style.backgroundColor = '#0c0';
+								quoteAuthorInput.placeholder = requiredFieldMsg;
+							}
+							if (quoteForm.quote_content.$invalid){
+								quoteContentInput.style.backgroundColor = '#0c0';
+								quoteContentInput.placeholder = requiredFieldMsg;
+							}
+            }
 
         }
 
