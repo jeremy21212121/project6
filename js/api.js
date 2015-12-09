@@ -1,7 +1,7 @@
 (function ( ) {
 	'use strict';
 
-   angular.module('quotesondev',[])
+   angular.module('quotesondev',['ngSanitize'])
 
 	 .config(['$locationProvider', function($locationProvider){
 
@@ -23,65 +23,77 @@
 	 })
 
 	 .factory('quotes',['$http','QUOTE_API', '$q', function($http, QUOTE_API, $q){
-		 		return {
-					getRandomQuote: function(){
+
+			return {
+				getRandomQuote: function() {
 
 						var d = $q.defer();
 
 						var req = {
-							method: 'GET',
-							url: QUOTE_API.GET_URL + '?filter[orderby]=rand&filter[posts_per_page]=1'
+								method: 'GET',
+								url: QUOTE_API.GET_URL + '?filter[orderby]=rand&filter[posts_per_page]=1'
 						}
-						return $http(req);
-					},
-					submit: function(quote) {
-							var data = {
-							 title: quote.quote_title,
-	 						 content:quote.quote_content,
-	 						 _quod_quote_source: quote.quote_source,
-	 						 _quod_quote_source_url: quote.quote_source_url,
-							 post_status: 'pending'
 
-							};
+						function quote(response) {
+								var quote = response.data[0];
+								return {
+										title: quote.title.rendered,
+										source: quote._qod_quote_source,
+										source_url: quote._qod_quote_source_url,
+										slug: quote.slug,
+										content: angular.element(quote.content.rendered).text()
+								}
+						}
 
-							var req = {
+						function getRandomQuoteSuccess(response) {
+								d.resolve(quote(response));
+						}
+
+
+						function getRandomQuoteFailed(error) {
+								d.reject(error);
+						}
+
+
+						$http(req).then(getRandomQuoteSuccess, getRandomQuoteFailed);
+
+						return d.promise;
+
+				},
+				submit: function(quote) {
+
+						var data = {
+								title: quote.quote_author,
+								content: quote.quote_content,
+								_qod_quote_source: quote.quote_source,
+								_qod_quote_source_url: quote.quote_source_url,
+								post_status: 'pending'
+						};
+
+						var req = {
 								method: 'POST',
 								url: QUOTE_API.POST_URL,
 								headers: QUOTE_API.POST_HEADERS,
 								data: data
-							}
+						}
 
-							function quote(response) {
-		 					 var quote = response.data[0];
-		 					 return {
-		 						 title: quote.title.rendered,
-		 						 source:quote._qod_quote_source,
-		 						 source_url:quote._quod_quote_source_url,
-		 						 slug: quote.slug,
-		 						 content: angular.element(quote.content.rendered).text()
-		 					 }
-		 				 }
-						 function getRandomQuoteSuccess(response){
-							 d.resolve(quote(response));
-						 }
-						 function getRandomQuoteFailed(error){
-							 d.reject(error);
-						 }
-						 $http(req).then(getRandomQuoteSuccess, getRandomQuoteFailed);
-						 return d.promise;
-					}
+						return $http(req);
+
 				}
-	 }])
+		}
+
+
+		}])
 
 
 	 .controller('quoteFormCtrl', ['$scope', 'quotes', function($scope, quotes){
 		 $scope.quote = {};
 
-		 function quoteSuccess(response){
+		 function quoteSubmitSuccess(response){
 			 console.log('Success!',response);
 		 }
 
-		 function quoteFail(error){
+		 function quoteSubmitFail(error){
 			 console.log('Error! Errror!', error);
 		 }
 
@@ -123,13 +135,13 @@
 		 return {
 			 restrict: 'E',
 			 scope: {
-				 'wisdom': '='
+				 'quote': '='
 			 },
 			 template: '<span class="source">\
-			 							<span ng-if="wisdom.source&&wisdom.source_url">,\
-											<a href="{{wisdom.source_url}}">{{wisdom.source}} </a>\
+			 							<span ng-if="quote.source&&quote.source_url">,\
+											<a href="{{quote.source_url}}">{{quote.source}} </a>\
 										</span>\
-										<span ng-if="wisdom.source&&!wisdom.source_url">, {{wisdom.source}}</span>\
+										<span ng-if="quote.source&&!quote.source_url">, {{quote.source}}</span>\
 										</span>'
 
 		 }

@@ -13,7 +13,7 @@
 				<div class="site-info">
 					<ul class="footer-navigation clearfix">
 						<?php wp_list_pages('title_li='); ?>
-						<li>Brought to you by <a href="http://www.redacademy.com/">RED Academy</a></li>
+						<li>Brought to you by <a href="http://www.jeremypoole.ca/">Jeremy Poole</a></li>
 					</ul>
 				</div><!-- .site-info -->
 			</footer><!-- #colophon -->
