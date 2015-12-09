@@ -91,6 +91,11 @@
 
 		 function quoteSubmitSuccess(response){
 			 console.log('Success!',response);
+			 document.getElementById('quote-submission-form').style.display = 'none';
+			 document.querySelector('h1.entry-title').innerHTML = "Success!";
+			 document.querySelector('h1.entry-title').style.textAlign = 'center';
+
+			 document.querySelector('div.quote-submission-wrapper').innerHTML = "<p class='submit-another'><a href='javascript:history.go(0);'>Submit Another Quote</a></p>";
 		 }
 
 		 function quoteSubmitFail(error){
