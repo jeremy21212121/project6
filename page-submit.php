@@ -46,8 +46,7 @@ get_header(); ?>
 
                <p>Sorry, you must be logged in to submit a quote!</p>
 
-               <p><?php echo sprintf( '<a href="%1s">%2s</a>', esc_url( wp_login_url() ), 'Click here to login.' ); ?></p>
-
+               <p><?php echo sprintf( '<a href="%1s">%2s</a>', esc_url( wp_login_url() ), 'Click here to login.' ); ?>&nbsp;&nbsp;<a href="<?php bloginfo('wpurl'); ?>/wp-login.php?action=register"><?php _e('Click here to register.') ?></a></p>
             <?php endif; ?>
          </section>
 
