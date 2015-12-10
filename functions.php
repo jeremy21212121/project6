@@ -94,3 +94,19 @@ require get_template_directory() . '/inc/metaboxes.php';
 if ( is_plugin_active( 'rest-api/plugin.php' ) ) :
 	require get_template_directory() . '/inc/api.php';
 endif;
+
+// Customizing login screen
+function custom_login_stylesheet() {
+    wp_enqueue_style( 'custom-login', get_template_directory_uri() . '/style-login.css' );
+}
+add_action( 'login_enqueue_scripts', 'custom_login_stylesheet' );
+
+function custom_login_logo_url() {
+    return home_url();
+}
+add_filter( 'login_headerurl', 'custom_login_logo_url' );
+
+function my_login_logo_url_title() {
+    return 'Quotes on Dev';
+}
+add_filter( 'login_headertitle', 'my_login_logo_url_title' );
